@@ -1,0 +1,390 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Design system definition.
+ *
+ * The @theme inline block maps CSS custom properties to Tailwind utility
+ * classes (e.g. --color-primary -> bg-primary, text-primary).
+ *
+ * The :root and .dark blocks define the actual color values using oklch.
+ * All colors MUST use oklch format.
+ *
+ * To add a new semantic color:
+ * 1. Add the variable to :root (light value) and .dark (dark value)
+ * 2. Register it in @theme inline as --color-<name>: var(--<name>)
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.129 0.042 264.695);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.129 0.042 264.695);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.129 0.042 264.695);
+  --primary: oklch(0.208 0.042 265.755);
+  --primary-foreground: oklch(0.984 0.003 247.858);
+  --secondary: oklch(0.968 0.007 247.896);
+  --secondary-foreground: oklch(0.208 0.042 265.755);
+  --muted: oklch(0.968 0.007 247.896);
+  --muted-foreground: oklch(0.554 0.046 257.417);
+  --accent: oklch(0.968 0.007 247.896);
+  --accent-foreground: oklch(0.208 0.042 265.755);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.984 0.003 247.858);
+  --border: oklch(0.929 0.013 255.508);
+  --input: oklch(0.929 0.013 255.508);
+  --ring: oklch(0.704 0.04 256.788);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.984 0.003 247.858);
+  --sidebar-foreground: oklch(0.129 0.042 264.695);
+  --sidebar-primary: oklch(0.208 0.042 265.755);
+  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-accent: oklch(0.968 0.007 247.896);
+  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
+  --sidebar-border: oklch(0.929 0.013 255.508);
+  --sidebar-ring: oklch(0.704 0.04 256.788);
+}
+
+/* Teleprompter custom tokens */
+:root {
+  --prompter-bg: oklch(0 0 0);
+  --prompter-fg: oklch(1 0 0);
+  --prompter-eyeline: oklch(0.55 0.25 260);
+}
+
+.dark {
+  --background: oklch(0.129 0.042 264.695);
+  --foreground: oklch(0.984 0.003 247.858);
+  --card: oklch(0.208 0.042 265.755);
+  --card-foreground: oklch(0.984 0.003 247.858);
+  --popover: oklch(0.208 0.042 265.755);
+  --popover-foreground: oklch(0.984 0.003 247.858);
+  --primary: oklch(0.929 0.013 255.508);
+  --primary-foreground: oklch(0.208 0.042 265.755);
+  --secondary: oklch(0.279 0.041 260.031);
+  --secondary-foreground: oklch(0.984 0.003 247.858);
+  --muted: oklch(0.279 0.041 260.031);
+  --muted-foreground: oklch(0.704 0.04 256.788);
+  --accent: oklch(0.279 0.041 260.031);
+  --accent-foreground: oklch(0.984 0.003 247.858);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.984 0.003 247.858);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.551 0.027 264.364);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.208 0.042 265.755);
+  --sidebar-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-accent: oklch(0.279 0.041 260.031);
+  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.551 0.027 264.364);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+}
+
+::highlight(tp-main-selection-memory),
+::highlight(tp-rundown-selection-memory) {
+  background-color: oklch(0.76 0.14 80 / 42%);
+}
+
+/* Hide native number input spin buttons on toolbar steppers */
+/* ---- WebKit/Safari focus + selection failsafe ----
+ * Safari inherits `user-select: none` from decorative UI wrappers and then
+ * refuses to place a caret in the editor or in sidebar inputs. Force text
+ * selection back on for every real input surface. */
+input,
+textarea,
+[contenteditable="true"] {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  cursor: text !important;
+  -webkit-touch-callout: default;
+}
+
+.ProseMirror,
+.ProseMirror * {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  cursor: text !important;
+}
+
+.ProseMirror {
+  -webkit-user-modify: read-write !important;
+  outline: none !important;
+}
+
+.ProseMirror[contenteditable="false"] {
+  -webkit-user-modify: read-only !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  cursor: default !important;
+}
+
+.ProseMirror[contenteditable="false"] * {
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  cursor: default !important;
+}
+
+/* Buttons/checkboxes inside inputs shouldn't get the text caret cursor. */
+input[type="checkbox"],
+input[type="radio"],
+input[type="range"],
+input[type="color"],
+input[type="button"],
+input[type="submit"] {
+  cursor: pointer !important;
+}
+
+/* The tabIndex wrapper around EditorContent must never show a focus ring. */
+.tp-editor-shell:focus,
+.tp-editor-shell:focus-visible {
+  outline: none !important;
+}
+
+.no-spin::-webkit-outer-spin-button,
+.no-spin::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.no-spin {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Slash-command palette popup (TipTap suggestion menu). */
+.tp-slash-menu {
+  position: fixed;
+  z-index: 10000;
+  min-width: 200px;
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 4px;
+  border: 1px solid rgba(0, 85, 255, 0.4);
+  border-radius: 4px;
+  background: #0b0b0b;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+.tp-slash-item {
+  display: block;
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: 3px;
+  text-align: left;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #cfd9ff;
+  background: transparent;
+  cursor: pointer;
+}
+.tp-slash-item:hover,
+.tp-slash-item--active {
+  background: rgba(0, 85, 255, 0.25);
+  color: #fff;
+}
+
+/* Mobile: never let a decorative wrapper swallow the first touch. */
+@media (max-width: 767px) {
+  .tie-dye-bg,
+  .mobile-scale-wrapper > .pointer-events-none {
+    pointer-events: none !important;
+  }
+  .tp-scroll-container .ProseMirror {
+    pointer-events: auto !important;
+    touch-action: pan-y;
+  }
+}
+
+/*
+ * Prompt Mode lead-in / lead-out buffer.
+ *
+ * Without this the first block sits pinned at the top of the viewport in
+ * Prompt Mode — the performer can never scroll the opening line below the
+ * eyeline marker for a natural "roll in from the top" entrance. The same
+ * applies at the bottom: the final line must be able to travel all the way
+ * off the top edge instead of stopping mid-screen.
+ *
+ * 80vh top + 80vh bottom padding gives a full-screen buffer on either end
+ * and applies whether Prompt Mode is rendering raw block HTML (.tp-prompt)
+ * or a live ProseMirror instance (fallback selector kept for parity).
+ */
+/* The lead-in/out are real sibling elements in the prompt canvas rather than
+ * padding. This makes them part of the same measured scroll hierarchy as the
+ * script and removes the pre-paint scrollHeight race. */
+.tp-prompt,
+.tp-prompt .tp-editor,
+.tp-prompt .ProseMirror {
+  overflow: visible !important;
+}
+
+/*
+ * Three-way block visibility (Edit Mode).
+ *
+ *   .ghosted-block — visible but grayed; still fully editable so the operator
+ *                    can revive or tweak a skipped cue without diving into
+ *                    the sidebar.
+ *   .hidden-block  — collapsed out of the canvas entirely; only the Rundown
+ *                    sidebar can bring it back. Kept in the DOM for parity
+ *                    with any collab / measurement hooks that walk children.
+ *
+ * Prompt Mode strictly hides BOTH — the performer must never see a skipped
+ * cue mid-run.
+ */
+.ghosted-block {
+  opacity: 0.4;
+  filter: grayscale(1);
+  transition: opacity 120ms ease;
+}
+.ghosted-block:focus-within {
+  opacity: 0.75;
+}
+.hidden-block {
+  display: none !important;
+}
+.prompt-mode-active .ghosted-block,
+.prompt-mode-active .hidden-block {
+  display: none !important;
+}
+
+/*
+ * Mobile / touch scrolling.
+ *
+ * The prompter scroll container (80vh spacers + editor) must always accept
+ * native vertical swipes. Edit Mode scrolls natively; Prompt Mode uses the
+ * transform engine but still needs pan-y so the browser doesn't swallow the
+ * drag as a gesture.
+ */
+.tp-scroll-container {
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  /* React swaps the edit flow for the prompt flow (including 80vh spacers).
+   * Never let the browser counter-scroll that layout shift behind our engine. */
+  overflow-anchor: none !important;
+}
+
+.tp-scroll-container.overflow-y-auto {
+  overflow-y: auto !important;
+}
+
+/* Prompt Mode is transform-scrolled: the outer shell never scrolls, and the
+ * text layer is promoted to its own GPU layer so sub-pixel translate3d moves
+ * are composited instead of repainted (kills low-speed micro-stutter). */
+.tp-scroll-container.overflow-hidden {
+  overflow: hidden !important;
+  height: 100vh;
+}
+
+.tp-scroll-container > .will-change-transform {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+
+.tp-scroll-container .tp-editor,
+.tp-scroll-container .ProseMirror {
+  touch-action: pan-y;
+}
+
+/* The outer .tp-scroll-container is the only scroll owner. TipTap must remain
+ * fully expanded or its internal viewport creates a second set of bounds. */
+.tp-scroll-container .ProseMirror {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  overflow-anchor: none !important;
+}
+
+/* ---- Mobile Edit Mode: fluid layout ----
+ * The rigid 1920px master canvas + transform scale exists only so Prompt Mode
+ * mirrors line breaks 1:1 across screens. In Edit Mode on a phone it breaks
+ * TipTap focus and makes the viewport jump, so we revert to fluid wrapping. */
+@media (max-width: 767px) {
+  .tp-edit,
+  .tp-edit .tp-edit-flow,
+  .tp-edit .tp-editor,
+  .tp-edit .ProseMirror,
+  .tp-prompt,
+  .tp-prompt .tp-edit-flow,
+  .tp-prompt .tp-editor,
+  .tp-prompt .ProseMirror {
+    width: 100% !important;
+    max-width: 100% !important;
+    transform: none !important;
+    white-space: pre-wrap !important;
+    overflow-wrap: break-word !important;
+    word-break: break-word;
+  }
+}

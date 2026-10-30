@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; script-src 'self'" />
+    <title>PrompTinc Viewer</title>
+    <style>
+      :root { color-scheme: dark; }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; height: 100%; }
+      body {
+        background: #0a0a0a;
+        color: #f5f5f5;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      }
+      header {
+        position: sticky; top: 0; z-index: 10;
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 12px; padding: 12px 20px;
+        background: rgba(15,15,15,0.95);
+        border-bottom: 1px solid #262626;
+        backdrop-filter: blur(8px);
+      }
+      header h1 { font-size: 16px; font-weight: 600; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .controls { display: flex; align-items: center; gap: 8px; flex: none; }
+      button {
+        background: #1f1f1f; color: #f5f5f5; border: 1px solid #333;
+        border-radius: 8px; padding: 6px 12px; font-size: 13px; cursor: pointer;
+      }
+      button:hover { background: #2a2a2a; }
+      .zoom-val { font-variant-numeric: tabular-nums; min-width: 44px; text-align: center; font-size: 13px; color: #a3a3a3; }
+      main { max-width: 900px; margin: 0 auto; padding: 32px 24px 120px; }
+      .block { margin-bottom: 40px; }
+      .block-title { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: #737373; margin: 0 0 10px; }
+      .block.ghosted { opacity: .4; }
+      .body { font-size: calc(20px * var(--zoom, 1)); line-height: 1.5; }
+      .body p { margin: 0 0 1em; }
+      .body mark { padding: 0 .1em; border-radius: 2px; }
+      .empty { color: #737373; font-style: italic; }
+      .placeholder {
+        height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        gap: 18px; text-align: center; color: #a3a3a3; padding: 40px;
+      }
+      .placeholder h2 { color: #f5f5f5; margin: 0; }
+      .err { color: #f87171; }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div class="placeholder">
+        <h2>PrompTinc Viewer</h2>
+        <p>Open a <code>.promptinc</code> script file to read it here.</p>
+        <button id="open-btn">Open File\u2026</button>
+      </div>
+    </div>
+
+    <script>
+      let zoom = 1;
+      const root = document.getElementById("root");
+
+      function escapeText(s) {
+        return String(s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+      }
+
+      // Allow only safe inline formatting from the saved HTML body.
+      function sanitize(html) {
+        const tpl = document.createElement("template");
+        tpl.innerHTML = html || "";
+        const allowed = new Set(["P","BR","SPAN","STRONG","B","EM","I","U","S","MARK","H1","H2","H3","H4","UL","OL","LI","BLOCKQUOTE","A","DIV","SUB","SUP","CODE","PRE"]);
+        tpl.content.querySelectorAll("*").forEach((el) => {
+          if (!allowed.has(el.tagName)) { el.replaceWith(...el.childNodes); return; }
+          [...el.attributes].forEach((a) => {
+            const n = a.name.toLowerCase();
+            if (n === "style" || (n === "href" && el.tagName === "A")) return;
+            el.removeAttribute(a.name);
+          });
+          if (el.tagName === "A") { el.setAttribute("target", "_blank"); el.removeAttribute("href"); }
+        });
+        return tpl.innerHTML;
+      }
+
+      function renderControls(name) {
+        return (
+          '<header>' +
+          '<h1>' + escapeText(name) + '</h1>' +
+          '<div class="controls">' +
+          '<button id="open-btn">Open\u2026</button>' +
+          '<button id="zoom-out">A\u2212</button>' +
+          '<span class="zoom-val" id="zoom-val"></span>' +
+          '<button id="zoom-in">A+</button>' +
+          '</div></header>'
+        );
+      }
+
+      function render(result) {
+        if (!result || !result.ok) {
+          root.innerHTML =
+            '<div class="placeholder"><h2 class="err">Could not open file</h2>' +
+            '<p>' + escapeText((result && result.error) || "Unknown error") + '</p>' +
+            '<button id="open-btn">Open Another File\u2026</button></div>';
+          wireOpen();
+          return;
+        }
+        const data = result.data || {};
+        const blocks = Array.isArray(data.blocks) ? data.blocks : [];
+        let html = renderControls(data.name || "Untitled");
+        html += '<main>';
+        if (blocks.length === 0) {
+          html += '<p class="empty">This script has no blocks.</p>';
+        }
+        blocks.forEach((b, i) => {
+          const body = (b.body && b.body.trim()) ? sanitize(b.body) : '<p class="empty">(empty)</p>';
+          html += '<section class="block' + (b.ghosted ? " ghosted" : "") + '">';
+          html += '<p class="block-title">' + (i + 1) + '. ' + escapeText(b.title || ("Block " + (i + 1))) + '</p>';
+          html += '<div class="body">' + body + '</div>';
+          html += '</section>';
+        });
+        html += '</main>';
+        root.innerHTML = html;
+        applyZoom();
+        wireOpen();
+        document.getElementById("zoom-in").onclick = () => { zoom = Math.min(4, zoom + 0.1); applyZoom(); };
+        document.getElementById("zoom-out").onclick = () => { zoom = Math.max(0.5, zoom - 0.1); applyZoom(); };
+      }
+
+      function applyZoom() {
+        document.documentElement.style.setProperty("--zoom", String(zoom));
+        const v = document.getElementById("zoom-val");
+        if (v) v.textContent = Math.round(zoom * 100) + "%";
+      }
+
+      function wireOpen() {
+        const btn = document.getElementById("open-btn");
+        if (btn) btn.onclick = () => window.promptinc.openDialog();
+      }
+
+      wireOpen();
+      if (window.promptinc) window.promptinc.onOpen(render);
+    </script>
+  </body>
+</html>

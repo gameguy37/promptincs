@@ -1,0 +1,73 @@
+{
+  "name": "promptinc-viewer",
+  "version": "1.0.0",
+  "description": "Open and read .promptinc script files",
+  "author": { "name": "PrompTinc", "email": "hello@promptin.me" },
+  "homepage": "https://promptin.me",
+  "main": "main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "dist:linux": "electron-builder --linux AppImage deb --x64",
+    "dist:win": "electron-builder --win nsis --x64",
+    "dist:mac": "electron-builder --mac dmg zip"
+  },
+  "build": {
+    "appId": "me.promptin.viewer",
+    "productName": "PrompTinc Viewer",
+    "directories": { "output": "release", "buildResources": "build" },
+    "files": ["main.cjs", "preload.cjs", "package.json"],
+    "fileAssociations": [
+      {
+        "ext": "promptinc",
+        "name": "PrompTinc Script",
+        "description": "PrompTinc Teleprompter Script",
+        "role": "Editor",
+        "mimeType": "application/x-promptinc",
+        "icon": "build/icon.png"
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [{ "target": "dmg", "arch": ["x64", "arm64"] }, { "target": "zip", "arch": ["x64", "arm64"] }],
+      "icon": "build/icon.png",
+      "identity": null
+    },
+    "dmg": { "sign": false },
+    "win": {
+      "target": [{ "target": "nsis", "arch": ["x64"] }],
+      "icon": "build/icon.png",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "PrompTinc Viewer"
+    },
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "category": "Office",
+      "icon": "build/icon.png",
+      "mimeTypes": ["application/x-promptinc"],
+      "maintainer": "PrompTinc <hello@promptin.me>",
+      "desktop": { "entry": { "Name": "PrompTinc Viewer" } }
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "promptinc",
+        "repo": "trs-1"
+      }
+    ]
+  },
+  "devDependencies": {
+    "@electron/packager": "^20.0.1",
+    "electron": "^42.4.1",
+    "electron-builder": "^26.15.3"
+  },
+  "dependencies": {
+    "electron-updater": "^6.3.9"
+  }
+}
